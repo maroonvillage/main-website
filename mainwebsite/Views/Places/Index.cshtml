@@ -1,0 +1,16 @@
+﻿@model MainWebsite.Models.MvPlacesModel
+@{
+    ViewBag.Title = "Index";
+}
+<h2>Index</h2>
+<div>
+    <p>
+        @if (Model.MvPlaces != null)
+        {
+            foreach (var place in Model.MvPlaces)
+            {
+             <a href="/places/detail?name=@HttpUtility.UrlPathEncode(place.PlaceName)">@place.PlaceName</a><br /><br />
+            }
+        }
+    </p>
+</div>

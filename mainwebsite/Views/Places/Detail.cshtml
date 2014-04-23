@@ -1,0 +1,110 @@
+﻿@model MainWebsite.Models.MvPlacesModel
+@{
+    ViewBag.Title = "Detail";
+}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>@ViewBag.Title</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <script src="~/Scripts/jquery-2.1.0.min.js"></script>
+    <style type="text/css">
+        html
+        {
+            height: 100%;
+        }
+
+        body
+        {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #map-canvas
+        {
+            height: 100%;
+        }
+    </style>
+    <script type="text/javascript" src="@Model.GoogleMapsV3Url"></script>
+    <script type="text/javascript" src="@Model.GooglePlacesAPILibrary"></script>
+    <script type="text/javascript">
+        var map;
+        $(document).ready(function () {
+
+            var address = '@Model.PlaceAddress';
+            google.maps.event.addDomListener(window, 'load', $.initialize(address));
+        });
+
+        jQuery.extend({
+            initialize: function (address) {
+                var geocoder = new google.maps.Geocoder();
+                geocoder.geocode({ 'address': address }, function (results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+
+                        var mapOptions = {
+                            center: results[0].geometry.location,
+                            zoom: 15
+                        };
+
+                        map = new google.maps.Map(document.getElementById("map-canvas"),
+                                    mapOptions);
+                        //Set marker for central place
+                        var marker = new google.maps.Marker({
+                            map: map,
+                            animation: google.maps.Animation.DROP,
+                            position: results[0].geometry.location,
+                            title: 'Pacoima Charter School'
+                        });
+
+                        //build nearby search request for places library 
+                        var request = {
+                            location: results[0].geometry.location,
+                            radius: '2500',
+                            types: ['fire_station', 'school', 'hospital']
+                        };
+
+                        var service = new google.maps.places.PlacesService(map);
+                        service.nearbySearch(request, GpNearBySearchCallBack);
+
+                        //register a click event-listener on the map
+                        google.maps.event.addListener(marker, 'click', getDetails);
+
+
+                    } else {
+                        alert("Geocode was not successful for the following reason: " + status);
+                    }
+                });
+            }
+        });
+        function getDetails(reference) {
+            alert('a marker was clicked: ' + reference);
+        }
+
+        //Call back for Google Places Nearby Search
+        function GpNearBySearchCallBack(results, status) {
+            if (status == google.maps.places.PlacesServiceStatus.OK) {
+                for (var i = 0; i < results.length; i++) {
+                    var place = results[i];
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        position: place.geometry.location,
+                        title: place.name
+                    });
+
+                    //register a click event-listener on the map
+                    //passing a parameter causes the event to fire; dont want that behavior
+                    google.maps.event.addListener(marker, 'click', getDetails(place.reference));
+                }
+
+            }
+        }
+
+
+    </script>
+</head>
+<body>
+    <div id="map-canvas" />
+</body>
+</html>

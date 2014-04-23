@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MainWebsite", "mainwebsite\MainWebsite.csproj", "{F6CDD4AB-4326-4CBD-9857-9D0FA7BF5A48}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "mainwebsite\Core\Core.csproj", "{13A0B104-632D-4998-8928-8C2FD0D2930B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F6CDD4AB-4326-4CBD-9857-9D0FA7BF5A48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6CDD4AB-4326-4CBD-9857-9D0FA7BF5A48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6CDD4AB-4326-4CBD-9857-9D0FA7BF5A48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6CDD4AB-4326-4CBD-9857-9D0FA7BF5A48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13A0B104-632D-4998-8928-8C2FD0D2930B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13A0B104-632D-4998-8928-8C2FD0D2930B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13A0B104-632D-4998-8928-8C2FD0D2930B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13A0B104-632D-4998-8928-8C2FD0D2930B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.Interception.2.1.505.2\lib\NET35;packages\EnterpriseLibrary.Common.5.0.505.0\lib\NET35;packages\EnterpriseLibrary.Data.5.0.505.0\lib\NET35
+		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Data.6.0.1304.0\lib\NET45
+	EndGlobalSection
+EndGlobal
