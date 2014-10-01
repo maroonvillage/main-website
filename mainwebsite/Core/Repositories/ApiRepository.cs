@@ -44,9 +44,11 @@ namespace MaroonVillage.Core.Repositories
             var apiConfig = new ApiConfig();
             try
             {
-                var mySqlCommand = new MySqlCommand("mvmasterdb.GetApiConfigByName");
+                var mySqlCommand = new MySqlCommand();
+                mySqlCommand.CommandText = string.Format("CALL mvmasterdb.GetApiConfigByName('{0}')",apiName);
                 mySqlCommand.CommandType = CommandType.StoredProcedure;
-
+                //mySqlCommand.Parameters.Add("?apiConfigName", string.Format("'{0}'",apiName));
+                //mySqlCommand.Parameters["?apiConfigName"].Direction = ParameterDirection.Input;
                 using (var connection = GetMySqlConnection())
                 {
                     connection.ConnectionString = ConnectionString;
@@ -57,7 +59,7 @@ namespace MaroonVillage.Core.Repositories
                         {
                             apiConfig = new ApiConfig
                             {
-                                ApiConfigId = ParseInt(ParseString(reader["ApiConfig"])),
+                                ApiConfigId = ParseInt(ParseString(reader["ApiConfigId"])),
                                 ApiName = ParseString(reader["ApiName"]),
                                 ApiDescription = ParseString(reader["ApiDescription"]),
                                 BaseUrl = ParseString(reader["BaseUrl"]),
@@ -71,6 +73,10 @@ namespace MaroonVillage.Core.Repositories
                     }
 
                 }
+            }
+            catch (MySqlException msqlEx)
+            {
+                throw msqlEx;
             }
             catch (SqlException sqlEx)
             {
@@ -86,6 +92,55 @@ namespace MaroonVillage.Core.Repositories
         public ApiConfig GetApiConfigByKey(string apiKey)
         {
             throw new NotImplementedException("GetApiConfigByKey");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="apiConfigId"></param>
+        /// <returns></returns>
+        public IEnumerable<ApiRequestInput> GetApiRequestInputsByConfigId(int apiConfigId)
+        {
+            var apiRequestInputs = new List<ApiRequestInput>();
+            try
+            {
+                var mySqlCommand = new MySqlCommand("mvmasterdb.GetApiRequestInputByConfigId");
+                mySqlCommand.CommandType = CommandType.StoredProcedure;
+                mySqlCommand.Parameters.AddWithValue("?apiConfigId", (object)apiConfigId);
+                mySqlCommand.Parameters["?apiConfigId"].Direction = ParameterDirection.Input;
+                using (var connection = GetMySqlConnection())
+                {
+                    connection.ConnectionString = ConnectionString;
+                    connection.Open();
+                    using (var reader = MySqlHelper.ExecuteReader(connection, mySqlCommand.CommandText))
+                    {
+                        while (reader.Read())
+                        {
+                            var requestInput = new ApiRequestInput
+                            {
+                                RequestInputId = ParseInt(ParseString(reader["RequestInputId"])),
+                                ApiConfigId = ParseInt(ParseString(reader["ApiConfig"])),
+                                ParameterName = ParseString(reader["ParameterName"]),
+                                IsComponent = ParseBoolean(reader["IsComponent"]),
+                                IsRequired = ParseBoolean(reader["IsRequired"]),
+                                PrimaryId = ParseInt(ParseString(reader["PrimaryId"])),
+                                IsKey = ParseBoolean(reader["IsKey"])
+                            };
+                            apiRequestInputs.Add(requestInput);
+                        }
+                    }
+
+                }
+            }
+            catch (SqlException sqlEx)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            return apiRequestInputs;
         }
     }
 }

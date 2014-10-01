@@ -14,17 +14,28 @@ namespace MainWebsite
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            routes.MapRoute(
+routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
 
             routes.MapRoute(
-                name: "PlacesDefault",
-                url: "{controller}/{name}",
-                defaults: new { controller = "Places", action = "Index", name= UrlParameter.Optional }
-            );
+               name: "maroonmaps-place",
+               url: "{controller}/{action}/{id}",
+               defaults: new { controller = "MaroonMaps", action = "Place", id = UrlParameter.Optional }
+           );
+
+            routes.MapRoute(
+               name: "PlacesDefault",
+               url: "{controller}/{name}",
+               defaults: new { controller = "Places", action = "Index", name = UrlParameter.Optional }
+           );
+
+
+            
+
+           
 
 
             

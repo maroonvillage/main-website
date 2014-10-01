@@ -1,0 +1,258 @@
+﻿@model MainWebsite.Models.MaroonMapsModel
+@{
+    
+    
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    
+    <style type="text/css">
+        html
+        {
+            height: 100%;
+        }
+
+        body
+        {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #map-canvas
+        {
+            height: 100%;
+        }
+    </style>
+    <script type="text/javascript" src="@Model.GoogleMapsV3Url"></script>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places"></script>
+    <script type="text/javascript">
+        var map;
+        var service;
+        var infowindow;
+
+        function initialize() {
+            var lat = '@Model.DefaultLocation.Lattitude';
+            var lon = '@Model.DefaultLocation.Longitude';
+
+            var defaultLocation = new google.maps.LatLng(lat, lon);
+
+            var mapOptions = {
+                center: defaultLocation,
+                zoom: 12,
+                streetViewControl: false,
+                /*disableDefaultUI: true*/
+            };
+            map = new google.maps.Map(document.getElementById("map-canvas"),
+                mapOptions);
+
+            //Add Event Listeners
+            var marker = new google.maps.Marker({
+                position: map.getCenter(),
+                map: map,
+                title: 'Click to zoom'
+            });
+
+
+            //Get Places Library ...
+            service = new google.maps.places.PlacesService(map);
+
+
+            //Call NearBy Search function
+            //_gpNearBySearch(defaultLocation);
+           
+
+            //Radar Search ...
+            //_gpRadarSearch(defaultLocation);
+            
+            _gpTextSearch('restaurant', defaultLocation);
+
+           //Define event-listeners
+            addListeners();
+
+
+            //Display Info window ...
+            var infowindow = new google.maps.InfoWindow({
+                content: '@Model.DefaultLocation.FormattedAddress',
+                position: latLng
+            });
+            infowindow.open(map);
+
+
+            //Remove an event-handler (similar to referencing a elemnt by id in jquery with a #)
+            //google.maps.event.removeListener(listener1);
+
+            //Remove event-hanlder of a specific type of event (simiar to using a class selector for 
+            // ..a certain class of element like $('input)
+            // google.maps.event.clearListeners(map, 'zoom_changed');
+
+        }// end of Initialize function
+
+
+        function addListeners() {
+
+            google.maps.event.addListener(map, 'center_changed', function () {
+                // 3 seconds after the center of the map has changed, pan back to the
+                // marker.
+                window.setTimeout(function () {
+                    map.panTo(marker.getPosition());
+                }, 3000);
+            });
+
+            //Click event for marker ...
+            google.maps.event.addListener(marker, 'click', function () {
+                map.setZoom(8);
+                map.setCenter(marker.getPosition());
+            });
+
+            ///Click event for map ...
+            google.maps.event.addListener(map, 'click', function (event) {
+                placeMarker(event.latLng);
+            });
+
+            google.maps.event.addListener(map, 'zoom_changed', function () {
+                var zoomLevel = map.getZoom();
+                map.setCenter(latLng);
+                infowindow.setContent('Zoom: ' + zoomLevel);
+            });
+        }
+
+
+        function performSearch() {
+            var request = {
+                bounds: map.getBounds(),
+                radius: 500,
+                keyword: 'best view'
+            };
+            service.radarSearch(request, callbackRadar);
+            //was best view
+        }
+
+
+        function _gpNearBySearch(defaultLocation) {
+
+            //NearBy Search ...
+            var request = {
+                location: defaultLocation,
+                radius: '500',
+                types: '[establishment, store]'
+            };
+           
+            service.nearbySearch(request, callbackNear);
+        }
+
+        function _gpRadarSearch(defaultLocation) {
+
+            infoWindow = new google.maps.InfoWindow();
+            google.maps.event.addListenerOnce(map, 'bounds_changed', performSearch);
+
+        }
+
+        function _gpTextSearch(searchToken, defaultLocation) {
+
+            var request = {
+                location: defaultLocation,
+                radius: '500',
+                query: searchToken
+            };
+
+            service.textSearch(request, callbackText);
+
+        }
+
+        //callback function for place detail ...
+        function callbackDetail(place, status) {
+
+            if (status == google.maps.places.PlacesServiceStatus.OK) {
+                placePlacesMarker(place);
+            }
+        }
+
+
+        function callbackNear(results, status) {
+            alert(status);
+            if (status == google.maps.places.PlacesServiceStatus.OK) {
+                for (var i = 0; i < results.length; i++) {
+                    var place = results[i];
+                    placeMarker(place);
+                }
+            }
+        }
+
+        //callback function for radar search ...
+        function callbackRadar(results, status) {
+            alert(status);
+            if (status != google.maps.places.PlacesServiceStatus.OK) {
+                alert('Radar Search: ' + status);
+                return;
+            }
+            alert(results.length);
+            for (var i = 0, result; result = results[i]; i++) {
+                //if (i == 0) alert(JSON.stringify(result));
+
+                //var request = {
+                //    placeId: result.id
+                //};
+
+                ////Get Place detail ...
+                //service.getDetails(request, callbackDetail);
+
+                var marker = new google.maps.Marker({
+                    map: map,
+                    position: result.geometry.location,
+                    title: result.place_id
+                });
+            }
+        }
+
+
+        function callbackText(results, status) {
+            //alert(status);
+            //alert(results.length);
+            if (status == google.maps.places.PlacesServiceStatus.OK) {
+                for (var i = 0; i < results.length; i++) {
+                    var place = results[i];
+                    //placePlacesMarker(place, place.name);
+
+                    var marker = new google.maps.Marker({
+                        position: place.geometry.location,
+                        map: map,
+                        icon: '../../Content/images/map/icons/restaurant.png',
+                        title: place.name
+                    });
+
+                }
+            }
+        }
+
+        function placePlacesMarker(location, name) {
+
+            var marker = new google.maps.Marker({
+                position: location.ge,
+                map: map,
+                title: name
+            });
+        }
+
+
+        function placeMarker(location) {
+            var marker = new google.maps.Marker({
+                position: location,
+                map: map,
+                title: location.name
+            });
+            map.setCenter(location);
+        }
+
+      
+        //load map ...
+        google.maps.event.addDomListener(window, 'load', initialize);
+        
+    </script>
+</head>
+<body>
+    <div id="map-canvas" />
+</body>
+</html>

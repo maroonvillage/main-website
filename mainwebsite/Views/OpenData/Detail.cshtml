@@ -1,0 +1,35 @@
+﻿@using MaroonVillage.Core.DomainModel
+@model MainWebsite.Models.OpenDataModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Detail</title>
+</head>
+<body>
+    <div>
+        <p>There are @Model.LiquorLicenses.Count liquor licenses in the state of Missouri (MO)</p>
+         @{
+             var counties = Model.LiquorLicenses.Select(x => x.county).Distinct();
+         }
+    </div>
+    <div>
+        @{foreach (LiquorLicense ll in Model.LiquorLicenses)
+          {
+            <p>
+                @ll.license_number&nbsp;
+                @ll.original_date&nbsp;
+                @ll.businesstype&nbsp;
+                @ll.street_number&nbsp;@ll.street&nbsp;@ll.city&nbsp;
+                @ll.county
+            </p>
+          }
+        }
+    </div>
+</body>
+</html>

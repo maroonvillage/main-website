@@ -51,10 +51,14 @@ namespace MaroonVillage.Core.Repositories.Google
 
             }
             address = string.Format("?address={0}", requestParams.Address);
-            components = string.Format("&components={0}", requestParams.RequestComponents.GetComponentFilterString());
+
+            //Add this conditionally ...
+            //components = string.Format("&components={0}", requestParams.RequestComponents.GetComponentFilterString());
+
+
             //Append required parameters onto requrest
             requestUrl.Append(address);
-            requestUrl.Append(components);
+            //requestUrl.Append(components);
             requestUrl.Append(sensor);
 
             //Append optional parameters onto request if any

@@ -49,7 +49,6 @@ namespace MainWebsite.Models
                 return _place != null ? _place.GeoCodingObject.ToString() : string.Empty;
             }
         }
-
         public string PlaceAddress {
             get { return string.Format("{0}, {1}, {2} {3}", _place.Address1, _place.City, _place.State, _place.ZipCode); }
         }

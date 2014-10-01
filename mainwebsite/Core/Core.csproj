@@ -78,11 +78,14 @@
   <ItemGroup>
     <Compile Include="DomainModel\Address.cs" />
     <Compile Include="DomainModel\ApiConfig.cs" />
+    <Compile Include="DomainModel\ApiRequestInput.cs" />
     <Compile Include="DomainModel\ApiRequestParameters.cs" />
+    <Compile Include="DomainModel\LiquorLicense.cs" />
     <Compile Include="DomainModel\Component.cs" />
     <Compile Include="DomainModel\GeoCodingRequestParameters.cs" />
     <Compile Include="DomainModel\GooglePlacesRequestParameters.cs" />
     <Compile Include="DomainModel\MvPlace.cs" />
+    <Compile Include="DomainModel\UsState.cs" />
     <Compile Include="Enumerators\ApiConfigTypes.cs" />
     <Compile Include="Enumerators\CacheKeys.cs" />
     <Compile Include="Enumerators\Google\ComponentTypes.cs" />
@@ -97,19 +100,20 @@
     <Compile Include="Interfaces\Repositories\Google\IGoogleStreetViewImageRepository.cs" />
     <Compile Include="Interfaces\Repositories\IApiRepository.cs" />
     <Compile Include="Interfaces\Repositories\IMvPlacesRepository.cs" />
-    <Compile Include="Interfaces\Repositories\Socrata\IOpenDataSchoolsRepository.cs" />
+    <Compile Include="Interfaces\Repositories\Socrata\IOpenDataRepository.cs" />
     <Compile Include="Interfaces\Services\Google\IGeoCodingService.cs" />
     <Compile Include="Interfaces\Services\Google\IGooglePlacesService.cs" />
     <Compile Include="Interfaces\Services\ICacheService.cs" />
     <Compile Include="Interfaces\Services\IApiService.cs" />
     <Compile Include="Interfaces\Services\IMvPlacesService.cs" />
-    <Compile Include="Interfaces\Services\Socrata\IOpenDataSchoolsService.cs" />
+    <Compile Include="Interfaces\Services\Socrata\IOpenDataService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\ApiRepository.cs" />
     <Compile Include="Repositories\BaseRepository.cs" />
     <Compile Include="Repositories\Google\GeoCodingRepository.cs" />
     <Compile Include="Repositories\Google\GooglePlacesRepository.cs" />
     <Compile Include="Repositories\MvPlacesRepository.cs" />
+    <Compile Include="Repositories\Socrata\OpenDataRepository.cs" />
     <Compile Include="Services\ApiService.cs" />
     <Compile Include="Services\ApiServiceBase.cs" />
     <Compile Include="Services\CacheService.cs" />
@@ -117,6 +121,7 @@
     <Compile Include="Services\Google\GooglePlacesService.cs" />
     <Compile Include="Services\HelperService.cs" />
     <Compile Include="Services\MvPlacesService.cs" />
+    <Compile Include="Services\Socrata\OpenDataService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Enumerators\Google\ISO360-1.txt" />

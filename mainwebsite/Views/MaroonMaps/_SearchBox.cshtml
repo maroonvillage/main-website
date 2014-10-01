@@ -1,0 +1,12 @@
+﻿@model MainWebsite.Models.MaroonMapsModel
+@using (Html.BeginForm("index", "maroonmaps", FormMethod.Post, new { ViewBag.ReturnUrl }))
+{
+    @Html.AntiForgeryToken();
+<div class="container">
+    <div class="left">
+      @Html.LabelFor(x=> x.SearchToken)&nbsp;@Html.TextBoxFor(x=> x.SearchToken, new {id = "txtSearchToken"})
+    </div>
+    <div class="right">
+        <input type="submit" class="v_button_right_rd" value="Submit" /></div>
+</div>
+}

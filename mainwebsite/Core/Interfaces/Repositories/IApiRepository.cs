@@ -12,5 +12,6 @@ namespace MaroonVillage.Core.Interfaces.Repositories
         ApiConfig GetApiConfigById(int apiConfigId);
         ApiConfig GetApiConfigByName(string apiName);
         ApiConfig GetApiConfigByKey(string apiKey);
+        IEnumerable<ApiRequestInput> GetApiRequestInputsByConfigId(int apiConfigId);
     }
 }

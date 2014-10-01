@@ -22,7 +22,6 @@ namespace MainWebsite.Models
         /// </summary>
         public dynamic Data { get { return _data ?? (_data = new ExpandoObject()); } set { _data = value; } }
 
-
         /// <summary>
         /// 
         /// </summary>

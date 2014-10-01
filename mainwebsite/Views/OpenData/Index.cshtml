@@ -1,0 +1,39 @@
+﻿@using MaroonVillage.Core.DomainModel
+@using MainWebsite.Models;
+@model MainWebsite.Models.OpenDataModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <div>
+        @{ if (string.IsNullOrEmpty(Model.CurrentState))
+           {
+               foreach (UsState s in Model.UsStates)
+               {
+                   var url = string.Format("{0}{1}{2}",Url.Action("Index", "OpenData"),"?id=",s.StateAbbreviation);
+            <p>
+                <a href="@url" id="stateLink">@s.StateFullName</a><br />
+            </p>
+               }
+           }
+           else
+           {
+                 foreach (Field f in Model.OpenDataDatasets)
+               {
+            <p>
+                <a href="@string.Format("/OpenData/detail?state={0}&id={1}",Model.CurrentState, f.Id)" id="openDataLink">@f.Name</a><br />
+            </p>
+               }
+           }
+        }
+    </div>
+</body>
+</html>
