@@ -29,7 +29,18 @@ namespace MainWebsite.Models
         {
             get
             {
-                return string.IsNullOrEmpty(ConfigurationManager.AppSettings["GoogleMapsV3Url"]) != true ? ConfigurationManager.AppSettings["GoogleMapsV3Url"] : string.Empty;
+                return !string.IsNullOrEmpty(ConfigurationManager.AppSettings["GoogleMapsV3Url"]) ? ConfigurationManager.AppSettings["GoogleMapsV3Url"] : string.Empty;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string GoogleMapsPlacesLibary
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(ConfigurationManager.AppSettings["GoogleMapsV3Url"]) ? string.Format("{0}{1}", ConfigurationManager.AppSettings["GoogleMapsV3Url"], "?libraries=places") : string.Empty;
             }
         }
 

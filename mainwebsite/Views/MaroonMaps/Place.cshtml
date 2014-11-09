@@ -7,7 +7,7 @@
 <html>
 <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    
+
     <style type="text/css">
         html
         {
@@ -27,11 +27,17 @@
         }
     </style>
     <script type="text/javascript" src="@Model.GoogleMapsV3Url"></script>
-    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places"></script>
+    <script type="text/javascript" src="@Model.GoogleMapsPlacesLibary"></script>
     <script type="text/javascript">
         var map;
+        var panorama;
         var service;
         var infowindow;
+        var svService;
+        var panorama;
+
+        var markers = [];
+
 
         function initialize() {
             var lat = '@Model.DefaultLocation.Lattitude';
@@ -59,18 +65,44 @@
             //Get Places Library ...
             service = new google.maps.places.PlacesService(map);
 
+            //Get StreetView service ...
+            svService = new google.maps.StreetViewService()
+
+            panorama = new google.maps.StreetViewPanorama(document.getElementById("pano"));
 
             //Call NearBy Search function
             //_gpNearBySearch(defaultLocation);
-           
 
             //Radar Search ...
             //_gpRadarSearch(defaultLocation);
-            
-            _gpTextSearch('restaurant', defaultLocation);
 
-           //Define event-listeners
+            _gpTextSearch('airport', defaultLocation);
+
+            _gpTextSearch('cemetary', defaultLocation);
+
+            _gpTextSearch('park', defaultLocation);
+
+            _gpTextSearch('courthouse', defaultLocation);
+
+            _gpTextSearch('fire_station', defaultLocation);
+
+            _gpTextSearch('police', defaultLocation);
+
+            _gpTextSearch('hospital', defaultLocation);
+
+            _gpTextSearch('school', defaultLocation);
+
+
+            _gpStreetViewSerice(defaultLocation)
+
+
+            //Define event-listeners
             addListeners();
+
+            ////Info window for street view content ...
+            //var infowindow = new google.maps.InfoWindow({
+            //    content: contentString
+            //});
 
 
             //Display Info window ...
@@ -78,7 +110,7 @@
                 content: '@Model.DefaultLocation.FormattedAddress',
                 position: latLng
             });
-            infowindow.open(map);
+                infowindow.open(map);
 
 
             //Remove an event-handler (similar to referencing a elemnt by id in jquery with a #)
@@ -88,171 +120,333 @@
             // ..a certain class of element like $('input)
             // google.maps.event.clearListeners(map, 'zoom_changed');
 
-        }// end of Initialize function
+            }// end of Initialize function
 
 
-        function addListeners() {
+            function addListeners() {
 
-            google.maps.event.addListener(map, 'center_changed', function () {
-                // 3 seconds after the center of the map has changed, pan back to the
-                // marker.
-                window.setTimeout(function () {
-                    map.panTo(marker.getPosition());
-                }, 3000);
-            });
-
-            //Click event for marker ...
-            google.maps.event.addListener(marker, 'click', function () {
-                map.setZoom(8);
-                map.setCenter(marker.getPosition());
-            });
-
-            ///Click event for map ...
-            google.maps.event.addListener(map, 'click', function (event) {
-                placeMarker(event.latLng);
-            });
-
-            google.maps.event.addListener(map, 'zoom_changed', function () {
-                var zoomLevel = map.getZoom();
-                map.setCenter(latLng);
-                infowindow.setContent('Zoom: ' + zoomLevel);
-            });
-        }
+                google.maps.event.addListener(map, 'center_changed', function () {
+                    // 3 seconds after the center of the map has changed, pan back to the
+                    // marker.
+                    window.setTimeout(function () {
+                        map.panTo(marker.getPosition());
+                    }, 3000);
+                });
 
 
-        function performSearch() {
-            var request = {
-                bounds: map.getBounds(),
-                radius: 500,
-                keyword: 'best view'
-            };
-            service.radarSearch(request, callbackRadar);
-            //was best view
-        }
+                ///Click event for map ...
+                google.maps.event.addListener(map, 'bounds_changed', function (event) {
+                   
+                    alert(event.location);
 
+                    //_gpTextSearch('airport', defaultLocation);
 
-        function _gpNearBySearch(defaultLocation) {
+                    //_gpTextSearch('cemetary', defaultLocation);
 
-            //NearBy Search ...
-            var request = {
-                location: defaultLocation,
-                radius: '500',
-                types: '[establishment, store]'
-            };
-           
-            service.nearbySearch(request, callbackNear);
-        }
+                    //_gpTextSearch('park', defaultLocation);
 
-        function _gpRadarSearch(defaultLocation) {
+                    //_gpTextSearch('courthouse', defaultLocation);
 
-            infoWindow = new google.maps.InfoWindow();
-            google.maps.event.addListenerOnce(map, 'bounds_changed', performSearch);
+                    //_gpTextSearch('fire_station', defaultLocation);
 
-        }
+                    //_gpTextSearch('police', defaultLocation);
 
-        function _gpTextSearch(searchToken, defaultLocation) {
+                    //_gpTextSearch('hospital', defaultLocation);
 
-            var request = {
-                location: defaultLocation,
-                radius: '500',
-                query: searchToken
-            };
+                    //_gpTextSearch('school', defaultLocation);
+                });
 
-            service.textSearch(request, callbackText);
-
-        }
-
-        //callback function for place detail ...
-        function callbackDetail(place, status) {
-
-            if (status == google.maps.places.PlacesServiceStatus.OK) {
-                placePlacesMarker(place);
-            }
-        }
-
-
-        function callbackNear(results, status) {
-            alert(status);
-            if (status == google.maps.places.PlacesServiceStatus.OK) {
-                for (var i = 0; i < results.length; i++) {
-                    var place = results[i];
-                    placeMarker(place);
-                }
-            }
-        }
-
-        //callback function for radar search ...
-        function callbackRadar(results, status) {
-            alert(status);
-            if (status != google.maps.places.PlacesServiceStatus.OK) {
-                alert('Radar Search: ' + status);
-                return;
-            }
-            alert(results.length);
-            for (var i = 0, result; result = results[i]; i++) {
-                //if (i == 0) alert(JSON.stringify(result));
-
-                //var request = {
-                //    placeId: result.id
-                //};
-
-                ////Get Place detail ...
-                //service.getDetails(request, callbackDetail);
-
-                var marker = new google.maps.Marker({
-                    map: map,
-                    position: result.geometry.location,
-                    title: result.place_id
+                google.maps.event.addListener(map, 'zoom_changed', function () {
+                    var zoomLevel = map.getZoom();
+                    map.setCenter(latLng);
+                    infowindow.setContent('Zoom: ' + zoomLevel);
                 });
             }
-        }
 
 
-        function callbackText(results, status) {
-            //alert(status);
-            //alert(results.length);
-            if (status == google.maps.places.PlacesServiceStatus.OK) {
-                for (var i = 0; i < results.length; i++) {
-                    var place = results[i];
-                    //placePlacesMarker(place, place.name);
+            function performSearch() {
+                var request = {
+                    bounds: map.getBounds(),
+                    keyword: 'best view'//'airport,park,courthouse'
+                };
+                service.radarSearch(request, callbackRadar);
+                //was best view
+            }
 
-                    var marker = new google.maps.Marker({
-                        position: place.geometry.location,
-                        map: map,
-                        icon: '../../Content/images/map/icons/restaurant.png',
-                        title: place.name
-                    });
 
+            function _gpNearBySearch(defaultLocation) {
+
+                //NearBy Search ...
+                var request = {
+                    location: defaultLocation,
+                    radius: '500',
+                    types: '[airport,cemetary,park,courthouse]'
+                };
+
+                service.nearbySearch(request, callbackNear);
+            }
+
+            function _gpRadarSearch(defaultLocation) {
+
+                //infoWindow = new google.maps.InfoWindow();
+                google.maps.event.addListenerOnce(map, 'bounds_changed', performSearch);
+                performSearch();
+            }
+
+            function _gpTextSearch(searchToken, defaultLocation) {
+
+                var request = {
+                    location: defaultLocation,
+                    radius: '500',
+                    query: searchToken
+                };
+
+                service.textSearch(request, callbackText);
+
+            }
+
+            function _gpStreetViewSerice(defaultLocation) {
+
+                var panoramaOptions = {
+                    position: defaultLocation,
+                    pov: {
+                        heading: 165,
+                        pitch: 0
+                    },
+                    zoom: 1
+                };
+                var myPano = new google.maps.StreetViewPanorama(
+                    document.getElementById('map-canvas'),
+                    panoramaOptions);
+                myPano.setVisible(false);
+            }
+
+
+            //callback function for place detail ...
+            function callbackDetail(place, status) {
+
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
+                    placePlacesMarker(place);
                 }
             }
-        }
-
-        function placePlacesMarker(location, name) {
-
-            var marker = new google.maps.Marker({
-                position: location.ge,
-                map: map,
-                title: name
-            });
-        }
 
 
-        function placeMarker(location) {
-            var marker = new google.maps.Marker({
-                position: location,
-                map: map,
-                title: location.name
-            });
-            map.setCenter(location);
-        }
+            function callbackNear(results, status) {
+                alert(status);
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
+                    for (var i = 0; i < results.length; i++) {
+                        var place = results[i];
+                        var marker = new google.maps.Marker({
+                            position: place.geometry.location,
+                            map: map,
+                            title: place.name
+                        });
+                    }
+                }
+            }
 
-      
-        //load map ...
-        google.maps.event.addDomListener(window, 'load', initialize);
-        
+            //callback function for radar search ...
+            function callbackRadar(results, status) {
+                alert(status);
+                if (status != google.maps.places.PlacesServiceStatus.OK) {
+                    alert('Radar Search: ' + status);
+                    return;
+                }
+                //alert(results.length);
+                for (var i = 0, result; result = results[i]; i++) {
+                    //if (i == 0) alert(JSON.stringify(result));
+
+                    //var request = {
+                    //    placeId: result.id
+                    //};
+
+                    ////Get Place detail ...
+                    //service.getDetails(request, callbackDetail);
+                    //alert(result.types);
+                    var iconVal = null;
+                    var typesArr = result.types.split(',');
+                    if (typesArr.length > 0)
+                        iconVal = checkForIcon(typesArr);
+                    alert(iconVal);
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        position: result.geometry.location,
+                        title: result.place_id,
+                        icon: iconVal
+                    });
+                }
+            }
+
+            function callbackText(results, status) {
+                //alert(JSON.stringify(results));
+               // alert(results.length);
+                var iconPath = '';
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
+
+                    for (var i = 0; i < results.length; i++) {
+                        var place = results[i];
+                        //placePlacesMarker(place, place.name);
+                        //alert(place.types.length);
+                        //split the types array and get the first element ...
+
+                        var iconVal = null;
+                        //var typesArr = place.types.split(',');
+                        //alert(typesArr);
+                        if (place.types.length > 0) {
+                            //alert(place.name);
+                            iconVal = checkForIcon(place.types);
+                        }
+                           
+                        var marker = new google.maps.Marker({
+                            position: place.geometry.location,
+                            map: map,
+                            icon: iconVal,
+                            title: place.name
+                        });
+                        
+                        google.maps.event.addListener(marker, 'click', function () {
+                            svService.getPanoramaByLocation(place.geometry.location, 50, processSVData);
+                        });
+
+                    }
+                }
+            }
+
+            function placePlacesMarker(location, name) {
+                var marker = new google.maps.Marker({
+                    position: location.ge,
+                    map: map,
+                    title: name
+                });
+            }
+
+            function placeMarker(location) {
+                var marker = new google.maps.Marker({
+                    position: location,
+                    map: map,
+                    title: location.name
+                });
+                map.setCenter(location);
+            }
+
+            function checkForIcon(types) {
+
+                //types should be an array
+                for (i = 0; i < types.length; i++) {
+
+                    switch (types[i]) {
+
+                        case 'airport':
+                            return '../../Content/images/map/icons/airport.png';
+                            break;
+                        case 'aquarium':
+                            return '../../Content/images/map/icons/aquarium.png';
+                            break;
+                        case 'art_gallery':
+                            return '../../Content/images/map/icons/museum-art.png';
+                            break;
+                        case 'cemetery':
+                            return '../../Content/images/map/icons/cemetary.png';
+                            break;
+                        case 'park':
+                            return '../../Content/images/map/icons/park.png';
+                            break;
+                        case 'city_hall':
+                            return '../../Content/images/map/icons/administration.png';
+                            break;
+                        case 'courthouse':
+                            return '../../Content/images/map/icons/court.png';
+                            break;
+                        case 'dentist':
+                            return '../../Content/images/map/icons/dentist.png';
+                            break;
+                        case 'doctor':
+                            return '../../Content/images/map/icons/doctor.png';
+                            break;
+                        case 'embassy':
+                            return '../../Content/images/map/icons/embassy.png';
+                            break;
+                        case 'fire_station':
+                            return '../../Content/images/map/icons/firemen.png';
+                            break;
+                        case 'hospital':
+                            return '../../Content/images/map/icons/hospital.png';
+                            break;
+                        case 'library':
+                            return '../../Content/images/map/icons/library.png';
+                            break;
+                        case 'local_government_office':
+                            return 'default';
+                            break;
+                        case 'museum':
+                            return '../../Content/images/map/icons/museum.png';
+                            break;
+                        case 'police':
+                            return '../../Content/images/map/icons/police.png';
+                            break;
+                        case 'post_office':
+                            return '../../Content/images/map/icons/postal.png';
+                            break;
+                        case 'school':
+                            return '../../Content/images/map/icons/school.png';
+                            break;
+                        case 'stadium':
+                            return '../../Content/images/map/icons/stadium.png';
+                            break;
+                        case 'subway_station':
+                            return '../../Content/images/map/icons/subway.png';
+                            break;
+                        case 'train_station':
+                            return '../../Content/images/map/icons/train.png';
+                            break;
+                        case 'university':
+                            return '../../Content/images/map/icons/university.png';
+                            break;
+                        case 'veterinary_care':
+                            return '../../Content/images/map/icons/vet.png';
+                            break;
+                        case 'zoo':
+                            return '../../Content/images/map/icons/zoo.png';
+                            break;
+                        default:
+                            return null;
+                            break;
+                    }// end switch
+                }
+
+                return null;
+            }
+
+            function processSVData(data, status) {
+                //alert(status);
+                if (status == google.maps.StreetViewStatus.OK) {
+                    //var marker = new google.maps.Marker({
+                    //    position: data.location.latLng,
+                    //    map: map,
+                    //    title: data.location.description
+                    //});
+                    //alert(data.location.pano);
+                    var markerPanoID = data.location.pano;
+                    // Set the Pano to use the passed panoID
+                    panorama.setPano(markerPanoID);
+                    panorama.setPov({
+                        heading: 270,
+                        pitch: 0
+                    });
+                    panorama.setVisible(true);
+           
+                }
+            }
+
+
+            //load map ...
+            google.maps.event.addDomListener(window, 'load', initialize);
+
     </script>
 </head>
 <body>
-    <div id="map-canvas" />
+    <div id="map-canvas" style="width: 800px; height: 400px"></div>
+
+    <div id="pano" style="position:absolute; left:810px; top: 8px; width: 400px; height: 300px;z-index:999;"></div>
 </body>
 </html>
