@@ -1,1 +1,18 @@
-﻿
+﻿@model  MainWebsite.Models.DefaultModel
+
+<!DOCTYPE html>
+<html>
+<head>
+     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+     <title></title>
+   @*CSS*@
+    <link href="~/Content/css/BootStrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/BootStrap/bootstrap-theme.min.css" rel="stylesheet" />
+    @*JavaScript*@
+    <script src="~/Scripts/BootStrap/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-2.1.0.min.js"></script>
+</head>
+<body class="page-@Model.PageTitle.ToString().ToLower()">
+    @RenderBody()
+</body>
+</html>

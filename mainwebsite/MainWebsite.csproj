@@ -148,6 +148,10 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Content Include="Content\css\BootStrap\bootstrap-theme.css" />
+    <Content Include="Content\css\BootStrap\bootstrap-theme.min.css" />
+    <Content Include="Content\css\BootStrap\bootstrap.css" />
+    <Content Include="Content\css\BootStrap\bootstrap.min.css" />
     <Content Include="Content\images\map\icons\accident.png" />
     <Content Include="Content\images\map\icons\administration.png" />
     <Content Include="Content\images\map\icons\aestheticscenter.png" />
@@ -1149,7 +1153,12 @@
     <Content Include="Content\images\powered-by-google\ios\powered-by-google-on-white.png" />
     <Content Include="Global.asax" />
     <Content Include="Content\images\map\icons\.DS_Store" />
+    <Content Include="Content\css\BootStrap\bootstrap-theme.css.map" />
+    <Content Include="Content\css\BootStrap\bootstrap.css.map" />
     <None Include="Scripts\jquery-2.1.0.intellisense.js" />
+    <Content Include="Scripts\BootStrap\bootstrap.js" />
+    <Content Include="Scripts\BootStrap\bootstrap.min.js" />
+    <Content Include="Scripts\BootStrap\npm.js" />
     <Content Include="Scripts\jquery-2.1.0.js" />
     <Content Include="Scripts\jquery-2.1.0.min.js" />
     <Content Include="Web.config">
@@ -1161,15 +1170,16 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Views\Web.config">
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="Scripts\jquery-2.1.0.min.map" />
     <Content Include="Views\OpenData\Index.cshtml" />
     <Content Include="Views\OpenData\Detail.cshtml" />
     <Content Include="Views\MaroonMaps\Index.cshtml" />
     <Content Include="Views\MaroonMaps\_SearchBox.cshtml" />
     <Content Include="Views\MaroonMaps\Place.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1182,9 +1192,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Places\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Home\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Core\Core.csproj">
