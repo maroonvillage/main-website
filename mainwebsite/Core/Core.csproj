@@ -42,6 +42,24 @@
     <Reference Include="Autofac.Extras.CommonServiceLocator">
       <HintPath>..\..\packages\Autofac.Extras.CommonServiceLocator.3.1.1\lib\net40\Autofac.Extras.CommonServiceLocator.dll</HintPath>
     </Reference>
+    <Reference Include="DotNetOpenAuth">
+      <HintPath>..\..\packages\YouTube\DotNetOpenAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis">
+      <HintPath>..\..\packages\YouTube\Google.Apis.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Authentication.OAuth2">
+      <HintPath>..\..\packages\YouTube\Google.Apis.Authentication.OAuth2.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.FullProfile">
+      <HintPath>..\..\packages\YouTube\Google.Apis.FullProfile.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Youtube.v3">
+      <HintPath>..\..\packages\YouTube\Google.Apis.Youtube.v3.dll</HintPath>
+    </Reference>
+    <Reference Include="Hammock.ClientProfile">
+      <HintPath>..\..\packages\TweetSharp.2.3.1\lib\4.0\Hammock.ClientProfile.dll</HintPath>
+    </Reference>
     <Reference Include="log4net">
       <HintPath>..\..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
@@ -58,9 +76,8 @@
     <Reference Include="MySql.Web">
       <HintPath>..\..\packages\MySQL.NET.6.6.4\lib\net40\MySql.Web.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Newtonsoft.Json.6.0.2\lib\net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\packages\TweetSharp.2.3.1\lib\4.0\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -74,18 +91,27 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="TweetSharp">
+      <HintPath>..\..\packages\TweetSharp.2.3.1\lib\4.0\TweetSharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DomainModel\Address.cs" />
+    <Compile Include="DomainModel\AlprCapture.cs" />
     <Compile Include="DomainModel\ApiConfig.cs" />
+    <Compile Include="DomainModel\ApiRequest.cs" />
     <Compile Include="DomainModel\ApiRequestInput.cs" />
     <Compile Include="DomainModel\ApiRequestParameters.cs" />
+    <Compile Include="DomainModel\CivicsInformationRequestParameters.cs" />
+    <Compile Include="DomainModel\Country.cs" />
     <Compile Include="DomainModel\FlickrPhotoSearchParameters.cs" />
     <Compile Include="DomainModel\LiquorLicense.cs" />
     <Compile Include="DomainModel\Component.cs" />
     <Compile Include="DomainModel\GeoCodingRequestParameters.cs" />
     <Compile Include="DomainModel\GooglePlacesRequestParameters.cs" />
     <Compile Include="DomainModel\MvPlace.cs" />
+    <Compile Include="DomainModel\OpenWeatherMapRequestParameters.cs" />
+    <Compile Include="DomainModel\TedApiRequestParameters.cs" />
     <Compile Include="DomainModel\UsState.cs" />
     <Compile Include="Enumerators\ApiConfigTypes.cs" />
     <Compile Include="Enumerators\CacheKeys.cs" />
@@ -93,40 +119,60 @@
     <Compile Include="Enumerators\Google\GooglePlacesTypes.cs" />
     <Compile Include="Enumerators\Google\ResultsOuput.cs" />
     <Compile Include="Enumerators\Google\StatusCodes.cs" />
-    <Compile Include="Enumerators\IsoCountryCodesAlpha2.cs" />
+    <Compile Include="Enumerators\IsoCountryCodesAlpha.cs" />
     <Compile Include="Enumerators\ResponseOutputTypes.cs" />
+    <Compile Include="Enumerators\TED\TedApiResourceTypes.cs" />
+    <Compile Include="Enumerators\UnitTypes.cs" />
     <Compile Include="Enumerators\UsStates.cs" />
+    <Compile Include="Interfaces\Repositories\CsvDataSets\IAlprRepository.cs" />
     <Compile Include="Interfaces\Repositories\Flickr\IFlickrRepository.cs" />
+    <Compile Include="Interfaces\Repositories\Google\ICivicsInformationRepository.cs" />
     <Compile Include="Interfaces\Repositories\Google\IGeoCodingRepository.cs" />
     <Compile Include="Interfaces\Repositories\Google\IGooglePlacesRepository.cs" />
     <Compile Include="Interfaces\Repositories\Google\IGoogleStreetViewImageRepository.cs" />
+    <Compile Include="Interfaces\Repositories\Google\IYouTubeV3Repository.cs" />
     <Compile Include="Interfaces\Repositories\IApiRepository.cs" />
     <Compile Include="Interfaces\Repositories\IMvPlacesRepository.cs" />
+    <Compile Include="Interfaces\Repositories\OpenWeatherMap\IOpenWeatherMapRepository.cs" />
     <Compile Include="Interfaces\Repositories\Socrata\IOpenDataRepository.cs" />
+    <Compile Include="Interfaces\Repositories\TED\ITedApiRepository.cs" />
+    <Compile Include="Interfaces\Services\CsvDataSets\ICsvDataSetService.cs" />
     <Compile Include="Interfaces\Services\Flickr\IFlickrService.cs" />
+    <Compile Include="Interfaces\Services\Google\ICivicsInformationService.cs" />
     <Compile Include="Interfaces\Services\Google\IGeoCodingService.cs" />
     <Compile Include="Interfaces\Services\Google\IGooglePlacesService.cs" />
     <Compile Include="Interfaces\Services\ICacheService.cs" />
     <Compile Include="Interfaces\Services\IApiService.cs" />
     <Compile Include="Interfaces\Services\IMvPlacesService.cs" />
+    <Compile Include="Interfaces\Services\OpenWeatherMap\IOpenWeatherMapService.cs" />
     <Compile Include="Interfaces\Services\Socrata\IOpenDataService.cs" />
+    <Compile Include="Interfaces\Services\TED\ITedApiService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\ApiRepository.cs" />
     <Compile Include="Repositories\BaseRepository.cs" />
+    <Compile Include="Repositories\CsvDataSets\AlprRepository.cs" />
     <Compile Include="Repositories\Flickr\FlickrRepository.cs" />
+    <Compile Include="Repositories\Google\CivicsInformationRepository.cs" />
     <Compile Include="Repositories\Google\GeoCodingRepository.cs" />
     <Compile Include="Repositories\Google\GooglePlacesRepository.cs" />
+    <Compile Include="Repositories\Google\YouTubeV3Repository.cs" />
     <Compile Include="Repositories\MvPlacesRepository.cs" />
+    <Compile Include="Repositories\OpenWeatherMap\OpenWeatherMapRepository.cs" />
     <Compile Include="Repositories\Socrata\OpenDataRepository.cs" />
+    <Compile Include="Repositories\TED\TedApiRepository.cs" />
     <Compile Include="Services\ApiService.cs" />
     <Compile Include="Services\ApiServiceBase.cs" />
     <Compile Include="Services\CacheService.cs" />
+    <Compile Include="Services\CsvDataSets\CsvDataSetService.cs" />
     <Compile Include="Services\Flickr\FlickrService.cs" />
+    <Compile Include="Services\Google\CivicsInformationService.cs" />
     <Compile Include="Services\Google\GeoCodingService.cs" />
     <Compile Include="Services\Google\GooglePlacesService.cs" />
     <Compile Include="Services\HelperService.cs" />
     <Compile Include="Services\MvPlacesService.cs" />
+    <Compile Include="Services\OpenWeatherMap\OpenWeatherMapService.cs" />
     <Compile Include="Services\Socrata\OpenDataService.cs" />
+    <Compile Include="Services\TED\TedApiService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Enumerators\Google\ISO360-1.txt" />

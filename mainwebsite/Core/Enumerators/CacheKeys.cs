@@ -9,5 +9,8 @@ namespace MaroonVillage.Core.Enumerators
         [Description("ApiConfigByName_{0}")]
         [DefaultValue(1440)]
         ApiConfigByName,
+        [Description("CsvDataSet_{0}")]
+        [DefaultValue(1440)]
+        CsvDataSet
     }
 }

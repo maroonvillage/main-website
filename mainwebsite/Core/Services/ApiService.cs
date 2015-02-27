@@ -40,5 +40,16 @@ namespace MaroonVillage.Core.Services
             }
             return apiConfig;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="apiConfigId"></param>
+        /// <returns></returns>
+        public IEnumerable<ApiRequestInput> GetApiRequestInputsByConfigId(int apiConfigId)
+        {
+
+           return _apiRepository.GetApiRequestInputsByConfigId(apiConfigId);
+        }
     }
 }

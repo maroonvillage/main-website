@@ -48,6 +48,7 @@ namespace MaroonVillage.Core.Repositories
                                 City = ParseString(reader["City"]),
                                 State = ParseString(reader["State"]),
                                 ZipCode = ParseString(reader["ZipCode"]),
+                                Country = ParseString(reader["Country"]),
                                 NearByPlaceTypes = ParseString(reader["NearByPlaceTypes"])
                             };
                             places.Add(mvPlace);

@@ -14,6 +14,7 @@ namespace MaroonVillage.Core.DomainModel
         public bool IsRequired { get; set; }
         public int PrimaryId { get; set; }
         public bool IsKey { get; set; }
-
+        public int Ordinal { get; set; }
+        public bool IsFileName { get; set; }
     }
 }

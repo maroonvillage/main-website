@@ -21,6 +21,8 @@ namespace MaroonVillage.Core.DomainModel
         public string Lattitude { get; set; }
         public string Longitude { get; set; }
         public string NearByPlaceTypes { get; set; }
+        public string Country { get; set; }
+
 
         public JToken GeoCodingObject { get; set; }
 

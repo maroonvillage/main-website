@@ -2,15 +2,18 @@
 @{
     ViewBag.Title = "Index";
 }
-<h2>Index</h2>
 <div>
     <p>
         @if (Model.MvPlaces != null)
         {
             foreach (var place in Model.MvPlaces)
             {
-             <a href="/places/detail?name=@HttpUtility.UrlPathEncode(place.PlaceName)">@place.PlaceName</a><br /><br />
+                var placeName = place.PlaceName.Replace(" ", "+");
+             <a href="/places/detail?name=@HttpUtility.UrlPathEncode(placeName)">@place.PlaceName</a><br /><br />
             }
         }
+    </p>
+    <p>
+         <a href="#">View ALPR Data - Oakland</a>
     </p>
 </div>

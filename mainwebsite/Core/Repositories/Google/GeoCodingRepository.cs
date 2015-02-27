@@ -8,11 +8,11 @@ using System.Net.Http.Headers;
 using System.Text;
 using MaroonVillage.Core.DomainModel;
 using MaroonVillage.Core.Enumerators;
-using MaroonVillage.Core.Interfaces.Repositories.Google;
+using MaroonVillage.Core.Interfaces.Repositories.GoogleApi;
 using MaroonVillage.Core.Services;
 using Newtonsoft.Json.Linq;
 
-namespace MaroonVillage.Core.Repositories.Google
+namespace MaroonVillage.Core.Repositories.GoogleApi
 {
     public class GeoCodingRepository : IGeoCodingRepository
     {

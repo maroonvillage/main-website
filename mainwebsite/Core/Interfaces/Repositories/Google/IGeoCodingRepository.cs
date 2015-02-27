@@ -5,7 +5,7 @@ using System.Text;
 using MaroonVillage.Core.DomainModel;
 using Newtonsoft.Json.Linq;
 
-namespace MaroonVillage.Core.Interfaces.Repositories.Google
+namespace MaroonVillage.Core.Interfaces.Repositories.GoogleApi
 {
     public interface IGeoCodingRepository
     {

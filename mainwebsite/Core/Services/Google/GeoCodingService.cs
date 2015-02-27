@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MaroonVillage.Core.DomainModel;
-using MaroonVillage.Core.Interfaces.Repositories.Google;
+using MaroonVillage.Core.Interfaces.Repositories.GoogleApi;
 using MaroonVillage.Core.Interfaces.Services.Google;
 using Newtonsoft.Json.Linq;
 

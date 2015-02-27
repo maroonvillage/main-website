@@ -8,11 +8,11 @@ using System.Text;
 using MaroonVillage.Core.DomainModel;
 using MaroonVillage.Core.Enumerators;
 using MaroonVillage.Core.Enumerators.Google;
-using MaroonVillage.Core.Interfaces.Repositories.Google;
+using MaroonVillage.Core.Interfaces.Repositories.GoogleApi;
 using MaroonVillage.Core.Services;
 using Newtonsoft.Json.Linq;
 
-namespace MaroonVillage.Core.Repositories.Google
+namespace MaroonVillage.Core.Repositories.GoogleApi
 {
     public class GooglePlacesRepository : IGooglePlacesRepository
     {
@@ -29,6 +29,11 @@ namespace MaroonVillage.Core.Repositories.Google
             throw new NotImplementedException("");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="requestParams"></param>
+        /// <returns></returns>
         public JToken GetNearBySearch(IGooglePlacesRequestParameters requestParams)
         {
             var requestUrl = new StringBuilder(@"nearbysearch/");

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using MaroonVillage.Core.DomainModel;
 using MaroonVillage.Core.Enumerators;
 using MaroonVillage.Core.Interfaces.Repositories;
-using MaroonVillage.Core.Interfaces.Repositories.Google;
+using MaroonVillage.Core.Interfaces.Repositories.GoogleApi;
 using MaroonVillage.Core.Interfaces.Services;
 using MaroonVillage.Core.Interfaces.Services.Google;
 using Newtonsoft.Json;

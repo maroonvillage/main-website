@@ -9,5 +9,6 @@ namespace MaroonVillage.Core.Interfaces.Services
     public interface IApiService
     {
         ApiConfig GetApiConfigByName(string apiName);
+        IEnumerable<ApiRequestInput> GetApiRequestInputsByConfigId(int apiConfigId);
     }
 }

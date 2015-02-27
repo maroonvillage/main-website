@@ -21,4 +21,18 @@ namespace MaroonVillage.Core.Enumerators
         [Description("Unknown")]
         Unknown
     }
+
+
+    public enum IsoCountryCodesAlpha3
+    {
+        //list of codes
+        //http://en.wikipedia.org/wiki/ISO_3166-1
+        //...
+        [Description("USA")]
+        UnitedStates,
+        //...
+        [Description("Unknown")]
+        Unknown
+    }
+
 }

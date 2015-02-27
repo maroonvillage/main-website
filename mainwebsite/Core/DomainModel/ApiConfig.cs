@@ -6,7 +6,18 @@ using MaroonVillage.Core.Enumerators;
 
 namespace MaroonVillage.Core.DomainModel
 {
-    public class ApiConfig
+
+    public interface IApiConfig
+    {
+        int ApiConfigId { get; set; }
+        string ApiName { get; set; }
+        string ApiDescription { get; set; }
+        string BaseUrl { get; set; }
+        string ApiKey { get; set; }
+        int RequestQuota { get; set; }
+        string RequestPeriod { get; set; }
+    }
+    public class ApiConfig : IApiConfig
     {
         public int ApiConfigId { get; set; }
         public string ApiName { get; set; }

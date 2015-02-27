@@ -9,6 +9,7 @@
     <title>@ViewBag.Title</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <script src="~/Scripts/jquery-2.1.0.min.js"></script>
+    <link href="~/Content/css/mv_styles.css" rel="stylesheet" />
     <style type="text/css">
         html
         {
@@ -24,7 +25,9 @@
 
         #map-canvas
         {
-            height: 100%;
+            /*height: 100%;*/
+            width: 600px;
+            height: 400px;
         }
     </style>
     <script type="text/javascript" src="@Model.GoogleMapsV3Url"></script>
@@ -34,7 +37,15 @@
         $(document).ready(function () {
 
             var address = '@Model.PlaceAddress';
+            var countryCode = '@Model.Place.Country';
+            var placeCode = '@Model.Place.City';
+            var stateCode = '@Model.Place.State';
             google.maps.event.addDomListener(window, 'load', $.initialize(address));
+
+            //google.maps.event.addDomListener(window, 'load', $.getAlprData('oakland'));
+            //alert(address);
+            $.getGoogleCivicsInfo(address,placeCode, stateCode, countryCode);
+
         });
 
         jQuery.extend({
@@ -45,31 +56,37 @@
 
                         var mapOptions = {
                             center: results[0].geometry.location,
-                            zoom: 15
+                            zoom: 12
                         };
 
                         map = new google.maps.Map(document.getElementById("map-canvas"),
                                     mapOptions);
+
+                        var target = '@Model.Place.City';
+                        //alert(target.toLowerCase());
+                        if (target.toLowerCase() == 'oakland')
+                            $.getAlprData(target.toLowerCase(), map);
+
                         //Set marker for central place
-                        var marker = new google.maps.Marker({
-                            map: map,
-                            animation: google.maps.Animation.DROP,
-                            position: results[0].geometry.location,
-                            title: 'Pacoima Charter School'
-                        });
+                        //var marker = new google.maps.Marker({
+                        //    map: map,
+                        //    animation: google.maps.Animation.DROP,
+                        //    position: results[0].geometry.location,
+                        //    title: 'Pacoima Charter School'
+                        //});
 
                         //build nearby search request for places library 
-                        var request = {
-                            location: results[0].geometry.location,
-                            radius: '2500',
-                            types: ['fire_station', 'school', 'hospital']
-                        };
+                        //var request = {
+                        //    location: results[0].geometry.location,
+                        //    radius: '2500',
+                        //    types: ['fire_station', 'school', 'hospital']
+                        //};
 
-                        var service = new google.maps.places.PlacesService(map);
-                        service.nearbySearch(request, GpNearBySearchCallBack);
+                        //var service = new google.maps.places.PlacesService(map);
+                        //service.nearbySearch(request, GpNearBySearchCallBack);
 
-                        //register a click event-listener on the map
-                        google.maps.event.addListener(marker, 'click', getDetails);
+                        ////register a click event-listener on the map
+                        //google.maps.event.addListener(marker, 'click', getDetails);
 
 
                     } else {
@@ -78,9 +95,173 @@
                 });
             }
         });
-        function getDetails(reference) {
-            //alert('a marker was clicked: ' + reference);
-        }
+
+        jQuery.extend({
+            getAlprData: function (city, map1) {
+
+                $.ajax({
+                    url: '/places/GetAlprDataByCity?city=' + city,
+                    type: 'GET',
+                    context: document.body,
+                    contentType: 'json',
+
+                })
+                        .done(function (data) {
+                            if (map1 == null) alert('null map');
+
+                            for (var i = 0; i < data.results.length; i++) {
+                                var capturePoint = data.results[i];
+
+                                var marker1 = new google.maps.Marker({
+                                    map: map1,
+                                    position: new google.maps.LatLng(capturePoint["Lattitude"], capturePoint["Longitude"], false),
+                                    title: 'ALPR Capture Point ' + capturePoint["Lattitude"] + ' ' + capturePoint["Longitude"]
+                                });
+                                google.maps.event.addListener(marker1, 'click', marker1.title);
+                            }
+
+                        })
+                        .fail(function (data) {
+                            if (console) {
+                                console.log(data);
+                            }
+                            alert("An error occurred while saving the car.");
+                        });
+            }
+        });
+
+        jQuery.extend({
+            getGoogleCivicsInfo: function (param, placeCode, stateCode, countryCode) {
+
+                var divisionPrefix = 'ocd-division/country:';
+
+                if (countryCode) {
+
+                    divisionPrefix += countryCode.toLowerCase();
+                }
+                else {
+
+                    divisionPrefix += 'us';
+                }
+                divisionPrefix += '/state:' + stateCode.toLowerCase();
+
+                divisionPrefix += '/place:' + placeCode.replace(' ', '_').toLowerCase();
+
+                $.ajax({
+                    url: '/places/GetCivilInfo?address=' + param,
+                    type: 'GET',
+                    context: document.body,
+                    contentType: 'json',
+
+                })
+                        .done(function (data) {
+
+                            //Build 
+                            for (var i = 0; i < data["divisions"][divisionPrefix]["officeIndices"].length; i++) {
+
+                                var officeIndex = data["divisions"][divisionPrefix]["officeIndices"][i];
+
+                                var officeName = JSON.stringify(data["offices"][officeIndex]["name"]);
+
+                                var officialIndex = data["offices"][officeIndex]["officialIndices"];
+
+                                var repName = data["officials"][officialIndex]["name"];
+
+                                var info = 'Name: ' + repName + '<br /><br />';
+
+                                //check for address
+                                var address = data["officials"][officialIndex]["address"];
+                                if (address != null) {
+                                    info += address[0]["line1"] + '<br />';
+                                    info += address[0]["city"] + ', ' + address[0]["state"] + ' ' + address[0]["zip"] + '<br />';
+                                }
+                                info += '<br />';
+
+                                info += 'Phone(s): ';
+                              
+
+                                var phones = data["officials"][officialIndex]["phones"];
+                                //check for phones
+                                if (phones != null) {
+
+                                    for (var j = 0; j < phones.length; j++) {
+
+                                        info += phones[j];
+                                    }
+                                }
+                                //check urls
+                                var urls = data["officials"][officialIndex]["urls"];
+                                if (urls != null) {
+
+                                    $("#repUrl").attr('href', urls[0]);
+                                    $("#repUrl").attr('target', '_new');
+                                }
+
+                                var photo = data["officials"][officialIndex]["photoUrl"];
+                               
+                                $("#repImg").attr('src', photo);
+                                $("#repImg").attr('alt', repName + ' Image');
+
+                                //check emails
+                                var emails = data["officials"][officialIndex]["emails"];
+                                info += '<br />';
+                                info += 'Email(s): ';
+
+                                if (emails != null) {
+
+                                    info += emails[0];
+                                }
+                                
+
+                                //check channels
+                                var channels = data["officials"][officialIndex]["channels"];
+/*
+                                <a href="#" class="thumbnail" id="repUrl">
+               <img src="..." alt="..." id="repImg">
+           </a>
+           */
+                                info += "<br />";
+                                if (channels != null) {
+                                    //alert(channels[0]["type"]);
+                                    var hrefVal = '';
+                                    for (var k = 0; k < channels.length; k++) {
+
+                                        var type = channels[k]["type"];
+                                        var id = channels[k]["id"];
+
+                                        if (type == "Facebook") {
+
+                                            hrefVal = 'http://wwww.facebook.com/' + id;
+                                            info += "<a href='" + hrefVal + "' target='_new'>";
+                                            info += "<img src='../../images/social-media/socialmedia_sprite.png' class='facebook_icon' />";
+                                            info += "</a>&nbsp;";
+                                        }
+                                        else if (type == "Twitter") {
+
+                                            hrefVal = 'https://twitter.com/' + id;
+                                            info += "<a href='" + hrefVal + "' target='_new'>";
+                                            info += "<img src='../../images/social-media/socialmedia_sprite.png' class='twitter_icon' />";
+                                            info += "</a>&nbsp;";
+                                        }
+
+                                        //info += channels[j];
+                                    }
+
+                                }
+
+                                $("#repInfo").html(info);
+                            }
+
+                        })
+                        .fail(function (data) {
+                            if (console) {
+                                console.log(data);
+                            }
+                            alert("An error occurred while retreiving the Google Civics Information.");
+                        });
+            }
+        });
+
 
         //Call back for Google Places Nearby Search
         function GpNearBySearchCallBack(results, status) {
@@ -101,10 +282,25 @@
             }
         }
 
+        function GetAlprCaptures() {
+
+
+        }
+
 
     </script>
 </head>
 <body>
-    <div id="map-canvas" />
+    <div class="panel panel-default">
+        <div class="panel-heading">@Model.Place.City</div>
+        <div class="panel-body">
+            @Html.CheckBox("twitterChk", false, new { Text = "Twitter" })&nbsp;@Html.Label("Twitter")&nbsp;@Html.CheckBox("youTubeChk", false)&nbsp;@Html.Label("YouTube")&nbsp;@Html.CheckBox("instaGramChk", false)&nbsp;@Html.Label("Instagram")&nbsp;@Html.CheckBox("flickrChk", false)&nbsp;@Html.Label("Flickr")
+        </div>
+    </div>
+    <div class="row">
+        @RenderPage("~/Views/Shared/_WeatherBlockSimple.cshtml")
+        @RenderPage("~/Views/Shared/_CivicInfoBlock.cshtml")
+        <div id="map-canvas" />
+    </div>
 </body>
 </html>

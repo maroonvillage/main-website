@@ -124,7 +124,9 @@ namespace MaroonVillage.Core.Repositories
                                 IsComponent = ParseBoolean(reader["IsComponent"]),
                                 IsRequired = ParseBoolean(reader["IsRequired"]),
                                 PrimaryId = ParseInt(ParseString(reader["PrimaryId"])),
-                                IsKey = ParseBoolean(reader["IsKey"])
+                                IsKey = ParseBoolean(reader["IsKey"]),
+                                Ordinal = ParseInt(ParseString(reader["Ordinal"])),
+                                IsFileName = ParseBoolean(reader["IsFileName"]),
                             };
                             apiRequestInputs.Add(requestInput);
                         }
