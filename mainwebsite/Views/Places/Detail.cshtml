@@ -8,8 +8,6 @@
 <head>
     <title>@ViewBag.Title</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <script src="~/Scripts/jquery-2.1.0.min.js"></script>
-    <link href="~/Content/css/mv_styles.css" rel="stylesheet" />
     <style type="text/css">
         html
         {
@@ -30,6 +28,29 @@
             height: 400px;
         }
     </style>
+
+</head>
+<body>
+    <div class="panel panel-default">
+        <div class="panel-heading">@Model.Place.City</div>
+        <div class="panel-body">
+            @Html.CheckBox("twitterChk", false, new { Text = "Twitter" })&nbsp;@Html.Label("Twitter")&nbsp;@Html.CheckBox("youTubeChk", false)&nbsp;@Html.Label("YouTube")&nbsp;@Html.CheckBox("instaGramChk", false)&nbsp;@Html.Label("Instagram")&nbsp;@Html.CheckBox("flickrChk", false)&nbsp;@Html.Label("Flickr")
+        </div>
+    </div>
+    <div class="Container">
+      <p>Carousel Goes Here.</p>
+        <div class="row">
+            @RenderPage("~/Views/Shared/_WeatherBlockSimple.cshtml")
+            @RenderPage("~/Views/Shared/_CivicInfoBlock.cshtml")
+            <div id="map-canvas" />
+        </div>
+    </div>
+    <br />
+    <div id="flickrPhotoContainer">
+        Flickr Photos Go Here.
+         
+    </div>
+   
     <script type="text/javascript" src="@Model.GoogleMapsV3Url"></script>
     <script type="text/javascript" src="@Model.GooglePlacesAPILibrary"></script>
     <script type="text/javascript">
@@ -44,7 +65,9 @@
 
             //google.maps.event.addDomListener(window, 'load', $.getAlprData('oakland'));
             //alert(address);
-            $.getGoogleCivicsInfo(address,placeCode, stateCode, countryCode);
+            $.getGoogleCivicsInfo(address, placeCode, stateCode, countryCode);
+
+            $.getFlickrInfo(address);
 
         });
 
@@ -178,7 +201,7 @@
                                 info += '<br />';
 
                                 info += 'Phone(s): ';
-                              
+
 
                                 var phones = data["officials"][officialIndex]["phones"];
                                 //check for phones
@@ -198,7 +221,7 @@
                                 }
 
                                 var photo = data["officials"][officialIndex]["photoUrl"];
-                               
+
                                 $("#repImg").attr('src', photo);
                                 $("#repImg").attr('alt', repName + ' Image');
 
@@ -211,15 +234,11 @@
 
                                     info += emails[0];
                                 }
-                                
+
 
                                 //check channels
                                 var channels = data["officials"][officialIndex]["channels"];
-/*
-                                <a href="#" class="thumbnail" id="repUrl">
-               <img src="..." alt="..." id="repImg">
-           </a>
-           */
+
                                 info += "<br />";
                                 if (channels != null) {
                                     //alert(channels[0]["type"]);
@@ -262,6 +281,59 @@
             }
         });
 
+        jQuery.extend({
+            getFlickrInfo: function (param) {
+
+                $.ajax({
+                    url: '/places/GetFlickrPhotos?query=' + param,
+                    type: 'GET',
+                    context: document.body,
+                    contentType: 'json',
+
+                })
+                        .done(function (data) {
+
+                            var thumbNail = "";
+
+                            /*
+
+                            <div class="carousel-inner">
+    <div class="item active">
+      <img src="http://placehold.it/1200x315" alt="...">
+      <div class="carousel-caption">
+          <h3>Caption Text</h3>
+      </div>
+      */
+                            var index = 0;
+                            $('div', ".carousel-inner").each(function () {
+                                var currentDiv = $(this);
+
+                               // if (currentDiv.class)
+                                    alert(currentDiv.attr('class').val());
+
+                                console.log(currentDiv);
+                            });
+
+
+                            for (var p = 0; p < data.length; p++) {
+
+                                thumbNail += "<a href='#' class='thumbnail' id='flickr'" + data[p]["UserId"] + "'>";
+                                thumbNail += "<img src='" + data[p]["Small320Url"] + "' alt='" + data[p]["Title"] + "' id='" + data[p]["PhotoId"] + "' />";
+                                thumbNail += "</a><br />";
+                            }
+
+                            $("#flickrPhotoContainer").html(thumbNail);
+
+
+                        })
+                        .fail(function (data) {
+                            if (console) {
+                                console.log(data);
+                            }
+                            alert("An error occurred while retreiving Flickr Information.");
+                        });
+            }
+        });
 
         //Call back for Google Places Nearby Search
         function GpNearBySearchCallBack(results, status) {
@@ -281,26 +353,6 @@
 
             }
         }
-
-        function GetAlprCaptures() {
-
-
-        }
-
-
     </script>
-</head>
-<body>
-    <div class="panel panel-default">
-        <div class="panel-heading">@Model.Place.City</div>
-        <div class="panel-body">
-            @Html.CheckBox("twitterChk", false, new { Text = "Twitter" })&nbsp;@Html.Label("Twitter")&nbsp;@Html.CheckBox("youTubeChk", false)&nbsp;@Html.Label("YouTube")&nbsp;@Html.CheckBox("instaGramChk", false)&nbsp;@Html.Label("Instagram")&nbsp;@Html.CheckBox("flickrChk", false)&nbsp;@Html.Label("Flickr")
-        </div>
-    </div>
-    <div class="row">
-        @RenderPage("~/Views/Shared/_WeatherBlockSimple.cshtml")
-        @RenderPage("~/Views/Shared/_CivicInfoBlock.cshtml")
-        <div id="map-canvas" />
-    </div>
 </body>
 </html>

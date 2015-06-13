@@ -1,4 +1,7 @@
-﻿body {
+﻿body
+{
+    padding-top: 70px;
+    padding-bottom: 100px;
 }
 
 .facebook_icon
@@ -11,8 +14,20 @@
 
 .twitter_icon
 {
-	background: url('../images/social-media/socialmedia_sprite.png') no-repeat scroll -106px -88px transparent;
-	height: 35px;
-	/*margin-top: 22px;*/
-	width: 35px;
+    background: url('../images/social-media/socialmedia_sprite.png') no-repeat scroll -106px -88px transparent;
+    height: 35px;
+    /*margin-top: 22px;*/
+    width: 35px;
+}
+
+.carousel
+{
+    padding-bottom: 20px;
+}
+
+/* Bootstrap Customizations */
+.navbar-text > a
+{
+    color: inherit;
+    text-decoration: none;
 }

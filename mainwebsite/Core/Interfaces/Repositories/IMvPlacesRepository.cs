@@ -9,5 +9,6 @@ namespace MaroonVillage.Core.Interfaces.Repositories
     public interface IMvPlacesRepository
     {
         IEnumerable<MvPlace> GetAllMvPlaces();
+        IEnumerable<ServicePhoto> GetServicePhotos(string serviceName);
     }
 }

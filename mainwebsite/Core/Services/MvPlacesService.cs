@@ -14,17 +14,20 @@ using Newtonsoft.Json.Linq;
 
 namespace MaroonVillage.Core.Services
 {
-    public class MvPlacesService : IMvPlacesService
+    public class MvPlacesService : IMvPlacesService, IMvPlacesMongoDbService
     {
         private readonly ICacheService _cacheService;
         private readonly IMvPlacesRepository _mvPlacesRepository;
+        private readonly IMvPlacesMongoDbRepository _mvPlacesMongoDbRepository;
         private readonly IGeoCodingRepository _geoCodingRepository;
 
-        public MvPlacesService(IMvPlacesRepository mvPlacesRepository, IGeoCodingRepository geoCodingRepository, ICacheService cacheService)
+        public MvPlacesService(IMvPlacesRepository mvPlacesRepository, IGeoCodingRepository geoCodingRepository,
+            ICacheService cacheService, IMvPlacesMongoDbRepository mvPlacesMongoDbRepository)
         {
             _mvPlacesRepository = mvPlacesRepository;
             _geoCodingRepository = geoCodingRepository;
             _cacheService = cacheService;
+            _mvPlacesMongoDbRepository = mvPlacesMongoDbRepository;
         }
 
         /// <summary>
@@ -110,5 +113,15 @@ namespace MaroonVillage.Core.Services
             }
             return place ?? new MvPlace();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<SimplePlace> GetAllPlaces()
+        {
+            return _mvPlacesMongoDbRepository.GetAllPlaces();
+        }
+
     }
 }

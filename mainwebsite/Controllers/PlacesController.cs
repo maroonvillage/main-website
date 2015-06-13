@@ -10,6 +10,7 @@ using MaroonVillage.Core.DomainModel;
 using MaroonVillage.Core.Enumerators;
 using MaroonVillage.Core.Interfaces.Services;
 using MaroonVillage.Core.Interfaces.Services.CsvDataSets;
+using MaroonVillage.Core.Interfaces.Services.Flickr;
 using MaroonVillage.Core.Interfaces.Services.Google;
 using MaroonVillage.Core.Interfaces.Services.OpenWeatherMap;
 using MaroonVillage.Core.Services;
@@ -20,46 +21,59 @@ namespace MainWebsite.Controllers
 {
     public class PlacesController : MvControllerBase
     {
+
         private readonly IMvPlacesService _mvPlacesService;
+        private readonly IMvPlacesMongoDbService _mvPlacesService2;
         private readonly IGooglePlacesService _googlePlacesService;
         private readonly ICsvDataSetService _csvDataSetService;
         private readonly IOpenWeatherMapService _openMapWeatherService;
         private readonly ICivicsInformationService _civicsInformationService;
+        private readonly IFlickrService _flickrService;
 
-        public PlacesController(IMvPlacesService mvPlacesService, IGooglePlacesService googlePlacesService,
-            ICsvDataSetService csvDataSetService, IOpenWeatherMapService openMapWeatherService, ICivicsInformationService civicsInformationService)
+        public PlacesController(IMvPlacesService mvPlacesService, IMvPlacesMongoDbService mvPlacesService2, IGooglePlacesService googlePlacesService,
+            ICsvDataSetService csvDataSetService, IOpenWeatherMapService openMapWeatherService,
+            ICivicsInformationService civicsInformationService, IFlickrService flickrService)
         {
             _mvPlacesService = mvPlacesService;
+            _mvPlacesService2 = mvPlacesService2; 
             _googlePlacesService = googlePlacesService;
             _csvDataSetService = csvDataSetService;
             _openMapWeatherService = openMapWeatherService;
             _civicsInformationService = civicsInformationService;
+            _flickrService = flickrService;
         }
+
 
         //
         // GET: /MvPlaces/
-
         public ActionResult Index()
         {
-
             var model = CreateModel<MvPlacesModel>(action: x =>
 
-                x.MvPlaces = _mvPlacesService.GetAllMvPlaces()
+                x.SimplePlaces = _mvPlacesService2.GetAllPlaces()
             );
-
             return View(model);
-        }
 
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public ActionResult Detail(string name)
         {
             var model = CreateModel<MvPlacesModel>(action: x =>
 
                 x.Place = _mvPlacesService.GetPlaceByName(name)
             );
+
+            var servicePhotos = _flickrService.GetServicePhotosJson("Flickr");
+
+            //TODO: Refactor this code to another action method to be called via jQuery/Ajax
             var requestParams = new OpenWeatherMapRequestParameters
             {
                 Id = 0,
-                Query = string.Format("{0},{1}", name,CoreHelperService.GetEnumDescription(IsoCountryCodesAlpha3.UnitedStates)),
+                Query = string.Format("{0},{1}", name, CoreHelperService.GetEnumDescription(IsoCountryCodesAlpha3.UnitedStates)),
                 Units = MaroonVillage.Core.Enumerators.UnitTypes.Metric
             };
 
@@ -75,6 +89,8 @@ namespace MainWebsite.Controllers
             model.sunrise = Convert.ToInt32(weather["sys"]["sunrise"]);
             model.sunset = Convert.ToInt32(weather["sys"]["sunset"]);
             model.Pressure = Convert.ToDecimal(weather["main"]["pressure"]);
+
+
 
             return View(model);
         }
@@ -113,7 +129,6 @@ namespace MainWebsite.Controllers
             return result ?? new JsonResult();
 
         }
-
         /// <summary>
         /// 
         /// </summary>
@@ -132,7 +147,7 @@ namespace MainWebsite.Controllers
                 OcId = !string.IsNullOrEmpty(ocid) ? ocid.Trim() : string.Empty,
             };
 
-            if(!string.IsNullOrEmpty(requestParams.Address))
+            if (!string.IsNullOrEmpty(requestParams.Address))
             {
                 civicsInfo = _civicsInformationService.GetRepresentativesByAddress(requestParams);
             }
@@ -140,6 +155,8 @@ namespace MainWebsite.Controllers
             {
                 civicsInfo = _civicsInformationService.GetRepresentativesByDivision(requestParams);
             }
+
+
 
             var result = new JsonNetResult
                        {
@@ -152,8 +169,33 @@ namespace MainWebsite.Controllers
             return result ?? new JsonResult();
 
         }//end method: GetCivilInfo
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public JsonResult GetFlickrPhotos(string query)
+        {
+            var places = _flickrService.GetPlacesByQuery(query);
 
+            var result = new JsonNetResult
+            {
+                Data = places.ToObject<dynamic>(),
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                Settings = { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }
+            };
 
+            return result ?? new JsonResult();
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="placeName"></param>
+        /// <returns></returns>
+        public JsonResult GetWeatherInfo(string placeName)
+        {
+            return new JsonResult();
+        }
         /// <summary>
         /// 
         /// </summary>
@@ -170,6 +212,48 @@ namespace MainWebsite.Controllers
             }, JsonRequestBehavior.AllowGet));
 
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="?"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult GetServicePhotos()
+        {
+            var photoList = _flickrService.GetServicePhotosJson("Flickr");
 
+            //photoList.to
+            var result = new JsonNetResult
+            {
+                Data = photoList,
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                Settings = { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }
+            };
+
+            return result ?? new JsonResult();
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public JsonResult GetCarouselPics(string query)
+        {
+            return new JsonResult();
+        }
+
+
+
+    }
+
+    class PlaceTag
+    {
+        public PlaceTag()
+        {
+
+        }
+
+        public int Counts { get; set; }
+        public string Tag { get; set; }
     }
 }

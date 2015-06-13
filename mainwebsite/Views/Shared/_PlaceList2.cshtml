@@ -1,0 +1,14 @@
+﻿<div class="list-group">
+    @{
+        var counter = 0;
+
+        foreach (var p in Model.SimplePlaces)
+        {
+            var placeStr = string.Format("{0} {1} {2}, {3} {4} County, {5}", p.Address1, p.City, p.State, p.ZipCode, p.County, p.Country);
+            <a href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">@p.Name</h4>
+                <p class="list-group-item-text">@placeStr</p>
+            </a> 
+        }
+    }
+</div>

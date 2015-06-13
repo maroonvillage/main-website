@@ -41,6 +41,9 @@ namespace MainWebsite.Models
             }
         }
         public IEnumerable<MvPlace> MvPlaces { get; set; }
+        public IEnumerable<SimplePlace> SimplePlaces { get; set; }
+        private IList<ServicePhoto> _servicePhotos;
+        public IList<ServicePhoto> ServicePhotos { get { return _servicePhotos; } set { _servicePhotos = value; } }
         public IEnumerable<JToken> GeoCodingResponses { get; set; }
         public JToken GooglePlacesResponse { get; set; }
         private MvPlace _place;
@@ -65,7 +68,6 @@ namespace MainWebsite.Models
                 return addr;
             }
         }
-
         private UnitTypes _weatherUnits;
         public UnitTypes WeatherUnits { get { return _weatherUnits; } set { _weatherUnits = value; } }
         public Coordinates Coords { get; set; }
@@ -134,8 +136,6 @@ namespace MainWebsite.Models
         public int CityId { get; set; }
         public string CityName { get; set; }
         public string WeatherMain { get; set; }
-
-
     }
 
     public class Coordinates

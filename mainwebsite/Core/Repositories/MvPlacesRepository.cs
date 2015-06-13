@@ -69,6 +69,55 @@ namespace MaroonVillage.Core.Repositories
             return places;
 
         }
+        /// <summary>
+        /// Retrieves photos from a service (e.g. Flickr, ..., etc.)
+        /// Meant to be generic 
+        /// </summary>
+        /// <param name="serviceName"></param>
+        /// <returns></returns>
+        public IEnumerable<ServicePhoto> GetServicePhotos(string serviceName)
+        {
+            var servicePhotos = new List<ServicePhoto>();
+            try
+            {
+                var mySqlCommand = new MySqlCommand("mvmasterdb.GetServicePhotosByName");
+                mySqlCommand.CommandText = string.Format("CALL mvmasterdb.GetServicePhotosByName('{0}')", serviceName);
+                mySqlCommand.CommandType = CommandType.StoredProcedure;
+               
+                using (var connection = GetMySqlConnection())
+                {
+                    connection.ConnectionString = ConnectionString;
+                    connection.Open();
+                    using (var reader = MySqlHelper.ExecuteReader(connection, mySqlCommand.CommandText))
+                    {
+                        while (reader.Read())
+                        {
+                            var svcPhoto = new ServicePhoto
+                            {
+                                ServiceName = ParseString(reader["ServiceName"]),
+                                UserId = ParseString(reader["UserId"]),
+                                UserName = ParseString(reader["UserName"]),
+                                PhotoId = ParseString(reader["PhotoId"]),
+                                ProfileUrl = ParseString(reader["Url"]),
+                                TagList = ParseString(reader["Tags"])
+                            };
+                            servicePhotos.Add(svcPhoto);
+                        }
+                    }
+
+                }
+            }
+            catch (SqlException sqlEx)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            return servicePhotos;
+        }
 
         //private IEnumerable<T> MultipleMvPlaces<T>(IDataReader reader, Action<IDataReader, T> action = null)
         //   where T : MvPlace, new()

@@ -1,0 +1,26 @@
+﻿@{
+    var counter = 0;
+    
+    foreach(var sp in Model.ServicePhotos){
+        
+        @if((counter % 3) > 0){
+            <div class="row">
+        }
+
+        <div class="col-sm-6 col-md-4">
+            <div class="thumbnail">
+                <img src="@sp.Thumbnail" width="242" height="200" alt="@sp.PhotoId">
+                <div class="caption">
+                    <h3>@sp.OwnerRealName </h3>
+                    <p>Testing </p>
+                    <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+                </div>
+            </div>
+        </div>
+      @if((counter % 3) > 0){
+            </div>
+       }
+        counter++;
+}
+}
+

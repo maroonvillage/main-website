@@ -16,6 +16,7 @@ namespace MaroonVillage.Core.DomainModel
         string ApiKey { get; set; }
         int RequestQuota { get; set; }
         string RequestPeriod { get; set; }
+        string Secret { get; set; }
     }
     public class ApiConfig : IApiConfig
     {
@@ -26,6 +27,7 @@ namespace MaroonVillage.Core.DomainModel
         public string ApiKey { get; set; }
         public int RequestQuota { get; set; }
         public string RequestPeriod { get; set; }
+        public string Secret { get; set; }
 
         public ApiConfig()
         {

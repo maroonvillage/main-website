@@ -1,19 +1,90 @@
 ﻿@model MainWebsite.Models.MvPlacesModel
 @{
     ViewBag.Title = "Index";
+
 }
-<div>
-    <p>
-        @if (Model.MvPlaces != null)
-        {
-            foreach (var place in Model.MvPlaces)
-            {
-                var placeName = place.PlaceName.Replace(" ", "+");
-             <a href="/places/detail?name=@HttpUtility.UrlPathEncode(placeName)">@place.PlaceName</a><br /><br />
-            }
-        }
-    </p>
-    <p>
-         <a href="#">View ALPR Data - Oakland</a>
-    </p>
+
+<div class="container">
+    @*@RenderPage("~/Views/Shared/_Carousel.cshtml")*@
+    @RenderPage("~/Views/Shared/_PlaceList2.cshtml")
+
 </div>
+<script src="~/Scripts/jquery-2.1.0.min.js"></script>
+<script src="~/Scripts/jquery.hotag.min.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        //alert('Welcome to Places');
+        //$.ajax({
+        //    url: '/places/GetServicePhotos/',
+        //    type: 'GET',
+        //    context: document.body,
+        //    contentType: 'json'
+
+        //})
+        //      .done(function (data) {
+
+        //          alert(JSON.stringify(data));
+        //          //Build 
+        //          //var item = '<div class="item">';
+
+        //          //for (var i = 0; i < data.length; i++) {
+
+        //          //    item += '<img src="' + data["OriginalUrl"] + '" alt="' + data["PhotoId"] + '" />';
+        //          //    item += '<div class="carousel-caption"><h3>' + data["OwnerRealName"] + '</h3></div></div>';
+        //          //}
+
+        //          //$(".carousel-inner").html(item);
+
+
+        //    //      <div class="item">
+        //    //    <img src="..." alt="...">
+        //    //    <div class="carousel-caption">
+        //    //        <h3>...</h3>
+        //    //        <h4>...</h4>
+        //    //    </div>
+        //    //</div>
+
+        //      })
+        //        .fail(function (data) {
+        //            if (console) {
+        //                console.log(data);
+        //            }
+        //            alert("An error occurred while retreiving Service Photos.");
+        //        });
+
+        jQuery.extend({
+            getServicePhotos: function () {
+                alert('in getservicephotos');
+                //$.ajax({
+                //    url: '/places/GetServicePhotos/',
+                //    type: 'GET',
+                //    context: document.body,
+                //    contentType: 'json'
+
+                //})
+                //      .done(function (data) {
+
+                //          alert(JSON.stringify(data));
+                //          //Build 
+                //          //for (var i = 0; i < data["divisions"][divisionPrefix]["officeIndices"].length; i++) {
+
+                //      })
+                //        .fail(function (data) {
+                //            if (console) {
+                //                console.log(data);
+                //            }
+                //            alert("An error occurred while retreiving Service Photos.");
+                //        });
+            }
+        });
+
+    });
+
+    //$("#demo").hotag({
+    //    tags: tags
+    //});
+
+   
+</script>

@@ -48,6 +48,10 @@
     <Reference Include="Autofac.Integration.WebApi">
       <HintPath>..\packages\Autofac.WebApi.3.1.0\lib\net40\Autofac.Integration.WebApi.dll</HintPath>
     </Reference>
+    <Reference Include="FlickrNet, Version=3.15.0.0, Culture=neutral, PublicKeyToken=2491df59efa5d132, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\FlickrNet.3.15.0\lib\net20\FlickrNet.dll</HintPath>
+    </Reference>
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
@@ -135,6 +139,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AutofacConfig.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MaroonMapsController.cs" />
     <Compile Include="Controllers\MvControllerBase.cs" />
@@ -152,6 +157,7 @@
     <Compile Include="Models\MaroonMapsModel.cs" />
     <Compile Include="Models\MvPlacesModel.cs" />
     <Compile Include="Models\OpenDataModel.cs" />
+    <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -163,6 +169,12 @@
     <Content Include="Content\css\BootStrap\bootstrap.css" />
     <Content Include="Content\css\BootStrap\bootstrap.min.css" />
     <Content Include="Content\css\mv_styles.css" />
+    <Content Include="Content\images\carousel\2233960320_27a139ae84_o.jpg" />
+    <Content Include="Content\images\carousel\5371846591_35e8ce45ff_o.jpg" />
+    <Content Include="Content\images\carousel\8610153028_19797a78b0_o.jpg" />
+    <Content Include="Content\images\carousel\la-day.jpg" />
+    <Content Include="Content\images\carousel\la-night.jpg" />
+    <Content Include="Content\images\carousel\seattle-day.jpg" />
     <Content Include="Content\images\map\icons\accident.png" />
     <Content Include="Content\images\map\icons\administration.png" />
     <Content Include="Content\images\map\icons\aestheticscenter.png" />
@@ -1168,11 +1180,14 @@
     <Content Include="Content\css\BootStrap\bootstrap-theme.css.map" />
     <Content Include="Content\css\BootStrap\bootstrap.css.map" />
     <None Include="Scripts\jquery-2.1.0.intellisense.js" />
+    <Content Include="scratch-pad.txt" />
     <Content Include="Scripts\BootStrap\bootstrap.js" />
     <Content Include="Scripts\BootStrap\bootstrap.min.js" />
     <Content Include="Scripts\BootStrap\npm.js" />
     <Content Include="Scripts\jquery-2.1.0.js" />
     <Content Include="Scripts\jquery-2.1.0.min.js" />
+    <Content Include="Scripts\jquery.hotag.js" />
+    <Content Include="Scripts\jquery.hotag.min.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -1198,6 +1213,12 @@
     <Content Include="Views\Shared\_Carousel.cshtml" />
     <Content Include="Views\Shared\_WeatherBlockSimple.cshtml" />
     <Content Include="Views\Shared\_CivicInfoBlock.cshtml" />
+    <Content Include="Views\Shared\_PlaceList.cshtml" />
+    <Content Include="Views\Admin\Login.cshtml" />
+    <Content Include="Views\Shared\_PlaceList2.cshtml" />
+    <Content Include="Views\Places\_Videos.cshtml" />
+    <Content Include="Views\Places\_Photos.cshtml" />
+    <Content Include="Views\Places\_News.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="apis\Twitter\" />
@@ -1238,7 +1259,7 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerPort>7603</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:26993/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
